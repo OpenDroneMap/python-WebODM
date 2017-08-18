@@ -24,6 +24,10 @@ Python client for WebODM API
 * Free software: MIT license
 * Documentation: https://python-webodm.readthedocs.io.
 
+Development Guideline
+---------------------
+
+* Using https://github.com/charlesthk/python-mailchimp as basis API Client, it seems to have a nice structure but still simpler then others.
 
 Features
 --------
