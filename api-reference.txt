@@ -1,0 +1,37 @@
+# Authentication
+POST    /api/token-auth/ # { username, password }
+
+
+# Project
+POST    /api/projects/ # { *name="", description="" }
+PATCH   /api/projects/{id}/ # { *name="", description="" }
+DELETE  /api/projects/{id}/
+GET     /api/projects/ # { page=1, id="", name="", description="", created_at="", ordering="" }
+
+
+# Task
+POST    /api/projects/{project_id}/tasks/ # { *images[]="", processing_node=null, name="", auto_processing_node=true, options="[]" }
+PATCH   /api/projects/{project_id}/tasks/{task_id}/ # { *images[]="", processing_node=null, name="", auto_processing_node=true, options="[]" }
+DELETE  /api/projects/{project_id}/tasks/{task_id}/
+GET     /api/projects/{project_id}/tasks/ # { page=1, id="", name="", description="", created_at="", ordering="" }
+
+GET     /api/projects/{project_id}/tasks/{task_id}/download/{asset} # assets=[all.zip, orthophoto.tif, orthophoto.png, textured_model.zip, georeferenced_model.las, georeferenced_model.ply, georeferenced_model.csv ]
+GET     /api/projects/{project_id}/tasks/{task_id}/assets/{path}/
+
+GET     /api/projects/{project_id}/tasks/{task_id}/output/ # { line=0 }
+
+POST    /api/projects/{project_id}/tasks/{task_id}/cancel/
+POST    /api/projects/{project_id}/tasks/{task_id}/remove/
+POST    /api/projects/{project_id}/tasks/{task_id}/restart/
+
+GET     /api/projects/{project_id}/tasks/{task_id}/tiles.json
+GET     /api/projects/{project_id}/tasks/{task_id}/tiles/{Z}/{X}/{Y}.png
+
+
+# Processing Node
+POST    /api/processingnodes/ # { *hostname="", *port= }
+PATCH   /api/processingnodes/ # { *hostname="", *port= }
+DELETE  /api/processingnodes/
+GET     /api/processingnodes/ # { id="", hostname="", port="", api_version="", queue_count="", ordering="", has_available_options="" }
+
+GET     /api/processingnodes/options/
