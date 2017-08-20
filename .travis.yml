@@ -2,7 +2,7 @@
 deploy:
   true:
     python: 2.7
-    repo: rmallermartins/python_webodm
+    repo: rmallermartins/python-WebODM
     tags: true
   distributions: sdist bdist_wheel
   password:
