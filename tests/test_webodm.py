@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Tests for `python_webodm` package."""
+
 import pytest
+
+from webodm import client
 
 
 @pytest.fixture
@@ -12,3 +16,9 @@ def response():
     """
     # import requests
     # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+
+
+def test_content(response):
+    """Sample pytest test function with the pytest fixture as an argument."""
+    # from bs4 import BeautifulSoup
+    # assert 'GitHub' in BeautifulSoup(response.content).title.string
