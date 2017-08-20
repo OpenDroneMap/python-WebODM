@@ -13,8 +13,8 @@ python-WebODM
         :target: https://python-webodm.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/rmallermartins/python_webodm/shield.svg
-     :target: https://pyup.io/repos/github/rmallermartins/python_webodm/
+.. image:: https://pyup.io/repos/github/rmallermartins/python-WebODM/shield.svg
+     :target: https://pyup.io/repos/github/rmallermartins/python-WebODM/
      :alt: Updates
 
 
