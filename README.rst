@@ -6,8 +6,8 @@ python-WebODM
 .. image:: https://img.shields.io/pypi/v/python_webodm.svg
         :target: https://pypi.python.org/pypi/python_webodm
 
-.. image:: https://img.shields.io/travis/rmallermartins/python_webodm.svg
-        :target: https://travis-ci.org/rmallermartins/python_webodm
+.. image:: https://img.shields.io/travis/rmallermartins/python-WebODM.svg
+        :target: https://travis-ci.org/rmallermartins/python-WebODM
 
 .. image:: https://readthedocs.org/projects/python-webodm/badge/?version=latest
         :target: https://python-webodm.readthedocs.io/en/latest/?badge=latest
@@ -41,4 +41,3 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
-
