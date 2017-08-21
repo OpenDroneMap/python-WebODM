@@ -1,6 +1,6 @@
 import requests
 
-from exceptions import NonFieldErrors
+from .exceptions import NonFieldErrors
 
 LOCAL_HOST = 'http://localhost:8000'
 
