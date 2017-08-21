@@ -4,20 +4,43 @@
 """Tests for `python_webodm` package."""
 
 import pytest
+import mock
 from requests import Response
 from webodm import Webodm, NonFieldErrors
 
 
-def test_invalid_credentials():
-    with pytest.raises(NonFieldErrors) as e:
-        Webodm('user', 'password')
-    assert 'Unable to login with provided credentials.' == str(e.value)
+# This method will be used by the mock to replace requests.get
+def mocked_requests_post(*args, **kwargs):
+    class MockResponse:
+        def __init__(self, json_data, status_code):
+            self.json_data = json_data
+            self.status_code = status_code
+
+        def json(self):
+            return self.json_data
+
+    if args[0] == 'http://localhost:8000/api/token-auth/':
+        return MockResponse({"token": "123456"}, 200)
+
+    return MockResponse(None, 404)
+
+
+@mock.patch('requests.post', side_effect=mocked_requests_post)
+def test_authenticate(mock_get):
+    client = Webodm()
+    assert client.token is None
+    client.authenticate('user', 'password123')
+    assert client.token is not None
+
+
+@mock.patch('requests.post', side_effect=mocked_requests_post)
+def test_client_auto_authenticate(mocker):
+    client = Webodm('user', 'password123')
+    assert client.host is not None
+    assert client.token is not None
 
 
 def test_client(mocker):
-    mocker.patch.object(Webodm, 'get_token')
-    Webodm.get_token.return_value = '123456'
-    client = Webodm('user', 'password123')
-    Webodm.get_token.assert_called_with('user', 'password123')
+    client = Webodm()
     assert client.host is not None
-    assert client.token is not None
+    assert client.token is None
