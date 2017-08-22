@@ -4,7 +4,6 @@
 """Tests for `python_webodm` package."""
 
 import pytest
-import mock
 from requests import Response
 from webodm import Webodm, NonFieldErrors
 
@@ -25,16 +24,16 @@ def mocked_requests_post(*args, **kwargs):
     return MockResponse(None, 404)
 
 
-@mock.patch('requests.post', side_effect=mocked_requests_post)
-def test_authenticate(mock_get):
+def test_authenticate(mocker):
+    mocker.patch('requests.post', side_effect=mocked_requests_post)
     client = Webodm()
     assert client.token is None
     client.authenticate('user', 'password123')
     assert client.token is not None
 
 
-@mock.patch('requests.post', side_effect=mocked_requests_post)
 def test_client_auto_authenticate(mocker):
+    mocker.patch('requests.post', side_effect=mocked_requests_post)
     client = Webodm('user', 'password123')
     assert client.host is not None
     assert client.token is not None
