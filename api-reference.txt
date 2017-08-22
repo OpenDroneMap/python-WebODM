@@ -24,8 +24,14 @@ POST    /api/projects/{project_id}/tasks/{task_id}/cancel/
 POST    /api/projects/{project_id}/tasks/{task_id}/remove/
 POST    /api/projects/{project_id}/tasks/{task_id}/restart/
 
-GET     /api/projects/{project_id}/tasks/{task_id}/tiles.json
-GET     /api/projects/{project_id}/tasks/{task_id}/tiles/{Z}/{X}/{Y}.png
+GET     /api/projects/{project_id}/tasks/{task_id}/orthophoto/tiles.json
+GET     /api/projects/{project_id}/tasks/{task_id}/orthophoto/tiles/{Z}/{X}/{Y}.png
+
+GET     /api/projects/{project_id}/tasks/{task_id}/dsm/tiles.json
+GET     /api/projects/{project_id}/tasks/{task_id}/dsm/tiles/{Z}/{X}/{Y}.png
+
+GET     /api/projects/{project_id}/tasks/{task_id}/dtm/tiles.json
+GET     /api/projects/{project_id}/tasks/{task_id}/dtm/tiles/{Z}/{X}/{Y}.png
 
 
 # Processing Node
