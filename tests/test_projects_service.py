@@ -54,11 +54,11 @@ def mocked_requests(*args, **kwargs):
     return MockResponse({'detail': 'Not Found.'}, 404)
 
 
-def test_projects_service(projects):
+def test_projects_service_init(projects):
     assert projects.endpoint == '/api/projects/'
 
 
-def test_projects_create(mocker, projects, project_data):
+def test_create_ok(mocker, projects, project_data):
     mocker.patch('requests.post', side_effect=mocked_requests)
     data = projects.create('Project One', 'Test description')
     project_data['name'] = 'Project One'
@@ -66,7 +66,7 @@ def test_projects_create(mocker, projects, project_data):
     assert data == project_data
 
 
-def test_projects_update(mocker, projects, project_data):
+def test_update_ok(mocker, projects, project_data):
     mocker.patch('requests.patch', side_effect=mocked_requests)
     data = projects.update(1, 'Project Two', 'Test description edited')
     project_data['name'] = 'Project Two'
@@ -74,20 +74,20 @@ def test_projects_update(mocker, projects, project_data):
     assert data == project_data
 
 
-def test_projects_update_not_found(mocker, projects, project_data):
+def test_update_not_found(mocker, projects, project_data):
     with pytest.raises(HTTPError) as e:
         mocker.patch('requests.patch', side_effect=mocked_requests)
         projects.update(2, 'Project Two', 'Test description edited')
     assert '404 - Not Found.' == str(e.value)
 
 
-def test_projects_service_get(mocker, projects, project_data):
+def test_get(mocker, projects, project_data):
     mocker.patch('requests.get', side_effect=mocked_requests)
     data = projects.get(1)
     assert data == project_data
 
 
-def test_projects_service_get_not_found(mocker, projects, project_data):
+def test_get_not_found(mocker, projects, project_data):
     with pytest.raises(HTTPError) as e:
         mocker.patch('requests.get', side_effect=mocked_requests)
         projects.get(2)

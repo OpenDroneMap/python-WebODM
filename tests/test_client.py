@@ -40,40 +40,34 @@ def mocked_requests_post(*args, **kwargs):
     }, 400)
 
 
-def test_client_without_auth(client):
-    assert client.token is None
-
-
-def test_client_default_host(client):
+def test_default_host(client):
     assert client.host == 'http://localhost:8000'
 
 
-def test_client_auto_authenticate(mocker):
+def test_init_without_params(client):
+    assert client.token is None
+
+
+def test_init_authenticated(mocker):
     mocker.patch('requests.post', side_effect=mocked_requests_post)
     client = Webodm('user', 'password123')
     assert client.token == '123456'
 
 
-def test_client_missing_password():
+def test_init_missing_password():
     with pytest.raises(AttributeError) as e:
         Webodm(username='user')
     assert 'Username passed, but password is missing.' in str(e.value)
 
 
-def test_client_missing_username():
+def test_init_missing_username():
     with pytest.raises(AttributeError) as e:
         Webodm(password='123456')
     assert 'Password passed, but username is missing.' in str(e.value)
 
 
-def test_client_unable_to_login(mocker):
+def test_authenticate_unable_to_login(mocker):
     mocker.patch('requests.post', side_effect=mocked_requests_post)
     with pytest.raises(NonFieldErrors) as e:
         Webodm('invalid', 'invalid')
     assert 'Unable to login with provided credentials.' in str(e.value)
-
-
-def test_authenticate(mocker, client):
-    mocker.patch('requests.post', side_effect=mocked_requests_post)
-    client.authenticate('user', 'password123')
-    assert client.token == '123456'
