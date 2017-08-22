@@ -20,7 +20,7 @@ class Webodm(object):
             self.authenticate(username, password)
 
     def authenticate(self, username, password):
-        url = '{}{}'.format(self.host, '/api/token-auth/')
+        url = '{0}{1}'.format(self.host, '/api/token-auth/')
         req_data = {
             'username': username,
             'password': password
