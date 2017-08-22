@@ -8,10 +8,12 @@ LOCAL_HOST = 'http://localhost:8000'
 class Webodm(object):
 
     def __init__(self, username=None, password=None, host=LOCAL_HOST):
+        print(username)
+        print(password)
         if username is not None and password is None:
-            AttributeError('Username passed, but password is missing.')
+            raise AttributeError('Username passed, but password is missing.')
         elif username is None and password is not None:
-            AttributeError('Password passed, but username is missing.')
+            raise AttributeError('Password passed, but username is missing.')
 
         self.token = None
         self.host = host
