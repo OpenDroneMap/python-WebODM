@@ -32,7 +32,7 @@ class Webodm(object):
 
         # Throw Exception when response has 'non_field_errors'
         if resp.status_code == 400 and 'non_field_errors' in data:
-            errors = " ".join(data.get('non_field_errors'))
+            errors = data.get('non_field_errors')
             raise NonFieldErrors(errors, response=resp)
 
         self.token = data.get('token')

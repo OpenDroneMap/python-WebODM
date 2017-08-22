@@ -27,10 +27,17 @@ def mocked_requests_post(*args, **kwargs):
         def json(self):
             return self.json_data
 
-    if args[0] == 'http://localhost:8000/api/token-auth/':
+    valid_url = 'http://localhost:8000/api/token-auth/'
+    valid_data = {
+        'username': 'user',
+        'password': 'password123'
+    }
+    if args[0] == valid_url and kwargs.get('data') == valid_data:
         return MockResponse({'token': '123456'}, 200)
 
-    return MockResponse(None, 404)
+    return MockResponse({
+        'non_field_errors': 'Unable to login with provided credentials.'
+    }, 400)
 
 
 def test_client_without_auth(client):
@@ -59,7 +66,8 @@ def test_client_missing_username():
     assert 'Password passed, but username is missing.' in str(e.value)
 
 
-def test_client_unable_to_login():
+def test_client_unable_to_login(mocker):
+    mocker.patch('requests.post', side_effect=mocked_requests_post)
     with pytest.raises(NonFieldErrors) as e:
         Webodm('invalid', 'invalid')
     assert 'Unable to login with provided credentials.' in str(e.value)
