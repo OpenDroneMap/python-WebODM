@@ -30,54 +30,29 @@ Development Guideline
 * Using https://github.com/charlesthk/python-mailchimp ans https://github.com/gophish/api-client-python as basis API Client, they seem to have a nice structure but still simpler then others.
 
 
-API Structure
-=============
+Roadmap
+-------
 
-WebODM
+* Client Class (Webodm)
+* Extract AuthService from Webodm
+* ProjectsService
 
-* Projects
+  - Create
+  - Update
+  - Delete
+  - Get
+  - List
+* TasksService
 
-  - Tasks
-* Processing Nodes
+  - Create
+  - Update
+  - Delete
+  - Get
+  - List
+  - ...
+* Node Service
 
-API Objects and Calls
-=====================
-
-Projects:
-
-* create(params)
-* update(id, params)
-* delete(id)
-* list(?params)
-
-Tasks:
-
-* create(project_id, params)
-* update(project_id, task_id, params)
-* delete(project_id, task_id)
-* list(project_id, ?params)
-* download(project_id, task_id, asset)
-* assets(project_id, task_id, path)
-* output(project_id, task_id, ?line)
-* cancel(project_id, task_id)
-* remove(project_id, task_id)
-* restart(project_id, task_id)
-* tiles(project_id, task_id, ?zxy)
-
-Processing Nodes:
-
-* add(params)
-* update(params)
-* delete()
-* list(params)
-* options()
-
-*?: Optional parameter*
-
-Features
---------
-
-* Create API Client (duh!)
+  - ...
 
 Credits
 ---------
