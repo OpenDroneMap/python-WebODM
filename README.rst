@@ -33,26 +33,26 @@ Development Guideline
 Roadmap
 -------
 
-* Client Class (Webodm)
-* Extract AuthService from Webodm
+* [X] Client Class (Webodm)
 * ProjectsService
 
-  - Create
-  - Update
-  - Delete
-  - Get
-  - List
+  - [X] Create
+  - [X] Update
+  - [ ] Delete
+  - [X] Get
+  - [ ] List
 * TasksService
 
-  - Create
-  - Update
-  - Delete
-  - Get
-  - List
+  - [ ] Create
+  - [ ] Update
+  - [ ] Delete
+  - [ ] Get
+  - [ ] List
   - ...
 * Node Service
 
   - ...
+* [ ] Extract AuthService from Webodm
 
 Credits
 ---------
