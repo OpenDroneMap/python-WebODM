@@ -39,7 +39,7 @@ Roadmap
   - [ ] Project Class
   - [X] Create
   - [X] Update
-  - [ ] Delete
+  - [X] Delete
   - [X] Get
   - [ ] List
 * TasksService
