@@ -20,7 +20,7 @@ class MockResponse:
 
 @pytest.fixture
 def projects():
-    return ProjectsService(LOCAL_HOST)
+    return ProjectsService(LOCAL_HOST, '123456')
 
 
 @pytest.fixture
