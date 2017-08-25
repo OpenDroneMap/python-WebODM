@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for ProjectsService class."""
+"""Tests for ProjectsService."""
 
 import pytest
 from requests import HTTPError
-from webodm import ProjectsService
+from webodm import LOCAL_HOST
+from webodm.services import ProjectsService
 
 
 class MockResponse:
@@ -19,7 +20,7 @@ class MockResponse:
 
 @pytest.fixture
 def projects():
-    return ProjectsService()
+    return ProjectsService(LOCAL_HOST)
 
 
 @pytest.fixture
