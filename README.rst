@@ -6,15 +6,15 @@ python-WebODM (In Development)
 .. image:: https://img.shields.io/pypi/v/python_webodm.svg
         :target: https://pypi.python.org/pypi/python_webodm
 
-.. image:: https://img.shields.io/travis/rmallermartins/python-WebODM.svg
-        :target: https://travis-ci.org/rmallermartins/python-WebODM
+.. image:: https://img.shields.io/travis/OpenDroneMap/python-WebODM.svg
+        :target: https://travis-ci.org/OpenDroneMap/python-WebODM
 
 .. image:: https://readthedocs.org/projects/python-webodm/badge/
         :target: https://python-webodm.readthedocs.io/en/latest/
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/rmallermartins/python-WebODM/shield.svg
-     :target: https://pyup.io/repos/github/rmallermartins/python-WebODM/
+.. image:: https://pyup.io/repos/github/OpenDroneMap/python-WebODM/shield.svg
+     :target: https://pyup.io/repos/github/OpenDroneMap/python-WebODM/
      :alt: Updates
 
 
