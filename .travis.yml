@@ -2,7 +2,7 @@
 deploy:
   true:
     python: 2.7
-    repo: rmallermartins/python-WebODM
+    repo: OpenDroneMap/python-WebODM
     tags: true
   distributions: sdist bdist_wheel
   password:
