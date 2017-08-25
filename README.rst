@@ -41,7 +41,8 @@ Roadmap
   - [X] Update
   - [X] Delete
   - [X] Get
-  - [ ] List
+  - [X] List
+  - [ ] Get and List filters
 * TasksService
 
   - [ ] Task Class
@@ -50,6 +51,7 @@ Roadmap
   - [ ] Delete
   - [ ] Get
   - [ ] List
+  - [ ] Get and List filters
   - ...
 * Node Service
 

@@ -56,22 +56,6 @@ class ProjectsService(object):
         resp = requests.post(url, headers=auth_header, data=data)
         return resp.json()
 
-    def delete(self, project_id):
-        url = '{0}{1}{2}/'.format(self.host, self.endpoint, project_id)
-        auth_header = {'Authorization': 'JWT {0}'.format(self.token)}
-
-        resp = requests.delete(url, headers=auth_header)
-
-        if resp.status_code >= 400 and resp.status_code < 500:
-            data = resp.json()
-            errors = " ".join(data.values())
-            error_msg = "{0} - {1}".format(resp.status_code, errors)
-            raise requests.HTTPError(error_msg, response=resp)
-        elif resp.status_code == 204:
-            return True
-
-        raise Exception('Unexpected status code: {0}'.format(resp.status_code))
-
     def update(self, project_id, name, description=None):
         url = '{0}{1}{2}/'.format(self.host, self.endpoint, project_id)
         auth_header = {'Authorization': 'JWT {0}'.format(self.token)}
@@ -90,8 +74,37 @@ class ProjectsService(object):
 
         return data
 
+    def delete(self, project_id):
+        url = '{0}{1}{2}/'.format(self.host, self.endpoint, project_id)
+        auth_header = {'Authorization': 'JWT {0}'.format(self.token)}
+
+        resp = requests.delete(url, headers=auth_header)
+
+        if resp.status_code >= 400 and resp.status_code < 500:
+            data = resp.json()
+            errors = " ".join(data.values())
+            error_msg = "{0} - {1}".format(resp.status_code, errors)
+            raise requests.HTTPError(error_msg, response=resp)
+        elif resp.status_code == 204:
+            return True
+
+        raise Exception('Unexpected status code: {0}'.format(resp.status_code))
+
     def get(self, project_id):
         url = '{0}{1}{2}/'.format(self.host, self.endpoint, project_id)
+        auth_header = {'Authorization': 'JWT {0}'.format(self.token)}
+        resp = requests.get(url, headers=auth_header)
+        data = resp.json()
+
+        if resp.status_code >= 400 and resp.status_code < 500:
+            errors = " ".join(data.values())
+            error_msg = "{0} - {1}".format(resp.status_code, errors)
+            raise requests.HTTPError(error_msg, response=resp)
+
+        return data
+
+    def list(self):
+        url = '{0}{1}'.format(self.host, self.endpoint)
         auth_header = {'Authorization': 'JWT {0}'.format(self.token)}
         resp = requests.get(url, headers=auth_header)
         data = resp.json()

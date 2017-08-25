@@ -8,6 +8,15 @@ from requests import HTTPError
 from webodm import ProjectsService
 
 
+class MockResponse:
+    def __init__(self, json_data, status_code):
+        self.json_data = json_data
+        self.status_code = status_code
+
+    def json(self):
+        return self.json_data
+
+
 @pytest.fixture
 def projects():
     return ProjectsService()
@@ -26,41 +35,21 @@ def project_data(name=None, description=None):
     return data
 
 
-def mocked_request_delete(*args, **kwargs):
-    class MockResponse:
-        def __init__(self, json_data, status_code):
-            self.json_data = json_data
-            self.status_code = status_code
+@pytest.fixture
+def project_list():
+    data = {
+        "count": 1,
+        "next": None,
+        "previous": None,
+        "results": [
+            project_data()
+        ]
+    }
+    return data
 
-        def json(self):
-            return self.json_data
 
-    if args[0] == 'http://localhost:8000/api/projects/1/':
-        return MockResponse({}, 204)
-    elif args[0] == 'http://localhost:8000/api/projects/10/':
-        return MockResponse({}, 300)
-
-    return MockResponse({'detail': 'Not Found.'}, 404)
-
-# This method will be used by the mock to replace requests.get
-def mocked_requests(*args, **kwargs):
-    class MockResponse:
-        def __init__(self, json_data, status_code):
-            self.json_data = json_data
-            self.status_code = status_code
-
-        def json(self):
-            return self.json_data
-
-    if args[0] == 'http://localhost:8000/api/projects/1/':
-        if kwargs.get('data', None) is not None:
-            data = project_data(
-                kwargs.get('data').get('name'),
-                kwargs.get('data').get('description')
-            )
-            return MockResponse(data, 200)
-        return MockResponse(project_data(), 200)
-    elif args[0] == 'http://localhost:8000/api/projects/':
+def mocked_request_create(*args, **kwargs):
+    if args[0] == 'http://localhost:8000/api/projects/':
         data = project_data(
             kwargs.get('data').get('name'),
             kwargs.get('data').get('description')
@@ -70,12 +59,46 @@ def mocked_requests(*args, **kwargs):
     return MockResponse({'detail': 'Not Found.'}, 404)
 
 
+def mocked_requests_update(*args, **kwargs):
+    if args[0] == 'http://localhost:8000/api/projects/1/':
+        data = project_data(
+            kwargs.get('data').get('name'),
+            kwargs.get('data').get('description')
+        )
+        return MockResponse(data, 200)
+
+    return MockResponse({'detail': 'Not Found.'}, 404)
+
+
+def mocked_request_delete(*args, **kwargs):
+    if args[0] == 'http://localhost:8000/api/projects/1/':
+        return MockResponse({}, 204)
+    elif args[0] == 'http://localhost:8000/api/projects/10/':
+        return MockResponse({}, 300)
+
+    return MockResponse({'detail': 'Not Found.'}, 404)
+
+
+def mocked_request_get(*args, **kwargs):
+    if args[0] == 'http://localhost:8000/api/projects/1/':
+        return MockResponse(project_data(), 200)
+
+    return MockResponse({'detail': 'Not Found.'}, 404)
+
+
+def mocked_request_list(*args, **kwargs):
+    if args[0] == 'http://localhost:8000/api/projects/':
+        return MockResponse(project_list(), 200)
+
+    return MockResponse({'detail': 'Not Found'}, 404)
+
+
 def test_projects_service_init(projects):
     assert projects.endpoint == '/api/projects/'
 
 
 def test_create_ok(mocker, projects, project_data):
-    mocker.patch('requests.post', side_effect=mocked_requests)
+    mocker.patch('requests.post', side_effect=mocked_request_create)
     data = projects.create('Project One', 'Test description')
     project_data['name'] = 'Project One'
     project_data['description'] = 'Test description'
@@ -83,7 +106,15 @@ def test_create_ok(mocker, projects, project_data):
 
 
 def test_update_ok(mocker, projects, project_data):
-    mocker.patch('requests.patch', side_effect=mocked_requests)
+    mocker.patch('requests.patch', side_effect=mocked_requests_update)
+    data = projects.update(1, 'Project Two', 'Test description edited')
+    project_data['name'] = 'Project Two'
+    project_data['description'] = 'Test description edited'
+    assert data == project_data
+
+
+def test_update_only_name(mocker, projects, project_data):
+    mocker.patch('requests.patch', side_effect=mocked_requests_update)
     data = projects.update(1, 'Project Two', 'Test description edited')
     project_data['name'] = 'Project Two'
     project_data['description'] = 'Test description edited'
@@ -92,7 +123,7 @@ def test_update_ok(mocker, projects, project_data):
 
 def test_update_not_found(mocker, projects, project_data):
     with pytest.raises(HTTPError) as e:
-        mocker.patch('requests.patch', side_effect=mocked_requests)
+        mocker.patch('requests.patch', side_effect=mocked_requests_update)
         projects.update(2, 'Project Two', 'Test description edited')
     assert '404 - Not Found.' == str(e.value)
 
@@ -118,13 +149,19 @@ def test_delete_unexpected_status_code(mocker, projects):
 
 
 def test_get(mocker, projects, project_data):
-    mocker.patch('requests.get', side_effect=mocked_requests)
+    mocker.patch('requests.get', side_effect=mocked_request_get)
     data = projects.get(1)
     assert data == project_data
 
 
 def test_get_not_found(mocker, projects, project_data):
     with pytest.raises(HTTPError) as e:
-        mocker.patch('requests.get', side_effect=mocked_requests)
+        mocker.patch('requests.get', side_effect=mocked_request_get)
         projects.get(2)
     assert '404 - Not Found.' == str(e.value)
+
+
+def test_list_ok(mocker, projects, project_list):
+    mocker.patch('requests.get', side_effect=mocked_request_list)
+    data = projects.list()
+    assert data == project_list
