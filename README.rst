@@ -45,7 +45,7 @@ Roadmap
   - [ ] Get and List filters
 * TasksService
 
-  - [ ] Task Class
+  - [X] Task Class
   - [ ] Create
   - [ ] Update
   - [ ] Delete
