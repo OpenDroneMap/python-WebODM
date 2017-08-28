@@ -87,11 +87,12 @@ def mocked_request_get(*args, **kwargs):
     return MockResponse({'detail': 'Not Found.'}, 404)
 
 
-def mocked_request_list(*args, **kwargs):
-    if args[0] == 'http://localhost:8000/api/projects/':
-        return MockResponse(project_list(), 200)
+def mocked_request_list_ok(*args, **kwargs):
+    return MockResponse(project_list(), 200)
 
-    return MockResponse({'detail': 'Not Found'}, 404)
+
+def mocker_request_list_404(*args, **kwargs):
+    return MockResponse({'detail': 'Not Found.'}, 404)
 
 
 def test_projects_service_init(projects):
@@ -123,8 +124,8 @@ def test_update_only_name(mocker, projects, project_data):
 
 
 def test_update_not_found(mocker, projects, project_data):
+    mocker.patch('requests.patch', side_effect=mocked_requests_update)
     with pytest.raises(HTTPError) as e:
-        mocker.patch('requests.patch', side_effect=mocked_requests_update)
         projects.update(2, 'Project Two', 'Test description edited')
     assert '404 - Not Found.' == str(e.value)
 
@@ -136,15 +137,15 @@ def test_delete(mocker, projects):
 
 
 def test_delete_not_found(mocker, projects):
+    mocker.patch('requests.delete', side_effect=mocked_request_delete)
     with pytest.raises(HTTPError) as e:
-        mocker.patch('requests.delete', side_effect=mocked_request_delete)
         projects.delete(2)
     assert '404 - Not Found.' == str(e.value)
 
 
 def test_delete_unexpected_status_code(mocker, projects):
+    mocker.patch('requests.delete', side_effect=mocked_request_delete)
     with pytest.raises(Exception) as e:
-        mocker.patch('requests.delete', side_effect=mocked_request_delete)
         projects.delete(10)
     assert 'Unexpected status code: 300' == str(e.value)
 
@@ -156,13 +157,20 @@ def test_get(mocker, projects, project_data):
 
 
 def test_get_not_found(mocker, projects, project_data):
+    mocker.patch('requests.get', side_effect=mocked_request_get)
     with pytest.raises(HTTPError) as e:
-        mocker.patch('requests.get', side_effect=mocked_request_get)
         projects.get(2)
     assert '404 - Not Found.' == str(e.value)
 
 
 def test_list_ok(mocker, projects, project_list):
-    mocker.patch('requests.get', side_effect=mocked_request_list)
+    mocker.patch('requests.get', side_effect=mocked_request_list_ok)
     data = projects.list()
     assert data == project_list
+
+
+def test_list_exception(mocker, projects, project_list):
+    mocker.patch('requests.get', side_effect=mocker_request_list_404)
+    with pytest.raises(HTTPError) as e:
+        projects.list()
+    assert '404 - Not Found.' == str(e.value)
