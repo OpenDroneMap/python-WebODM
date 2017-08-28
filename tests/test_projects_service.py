@@ -7,6 +7,7 @@ import pytest
 from requests import HTTPError
 from webodm import LOCAL_HOST
 from webodm.services import ProjectsService
+from webodm.models import Project
 
 
 class MockResponse:
@@ -101,26 +102,26 @@ def test_projects_service_init(projects):
 
 def test_create_ok(mocker, projects, project_data):
     mocker.patch('requests.post', side_effect=mocked_request_create)
-    data = projects.create('Project One', 'Test description')
+    project = projects.create('Project One', 'Test description')
     project_data['name'] = 'Project One'
     project_data['description'] = 'Test description'
-    assert data == project_data
+    assert project == Project.from_dict(project_data)
 
 
 def test_update_ok(mocker, projects, project_data):
     mocker.patch('requests.patch', side_effect=mocked_requests_update)
-    data = projects.update(1, 'Project Two', 'Test description edited')
+    project = projects.update(1, 'Project Two', 'Test description edited')
     project_data['name'] = 'Project Two'
     project_data['description'] = 'Test description edited'
-    assert data == project_data
+    assert project == Project.from_dict(project_data)
 
 
 def test_update_only_name(mocker, projects, project_data):
     mocker.patch('requests.patch', side_effect=mocked_requests_update)
-    data = projects.update(1, 'Project Two', 'Test description edited')
+    project = projects.update(1, 'Project Two', 'Test description edited')
     project_data['name'] = 'Project Two'
     project_data['description'] = 'Test description edited'
-    assert data == project_data
+    assert project == Project.from_dict(project_data)
 
 
 def test_update_not_found(mocker, projects, project_data):
@@ -152,8 +153,8 @@ def test_delete_unexpected_status_code(mocker, projects):
 
 def test_get(mocker, projects, project_data):
     mocker.patch('requests.get', side_effect=mocked_request_get)
-    data = projects.get(1)
-    assert data == project_data
+    project = projects.get(1)
+    assert project == Project.from_dict(project_data)
 
 
 def test_get_not_found(mocker, projects, project_data):
@@ -163,13 +164,13 @@ def test_get_not_found(mocker, projects, project_data):
     assert '404 - Not Found.' == str(e.value)
 
 
-def test_list_ok(mocker, projects, project_list):
+def test_list_ok(mocker, projects, project_list, project_data):
     mocker.patch('requests.get', side_effect=mocked_request_list_ok)
-    data = projects.list()
-    assert data == project_list
+    projects = projects.list()
+    assert projects == [Project.from_dict(project_data)]
 
 
-def test_list_exception(mocker, projects, project_list):
+def test_list_exception(mocker, projects):
     mocker.patch('requests.get', side_effect=mocker_request_list_404)
     with pytest.raises(HTTPError) as e:
         projects.list()

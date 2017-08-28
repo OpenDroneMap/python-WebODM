@@ -36,7 +36,7 @@ Roadmap
 * [X] Client Class (Webodm)
 * ProjectsService
 
-  - [ ] Project Class
+  - [X] Project Class
   - [X] Create
   - [X] Update
   - [X] Delete

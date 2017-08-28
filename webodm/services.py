@@ -6,6 +6,7 @@
 import requests
 
 from .exceptions import NonFieldErrors, ImproperlyConfigured
+from .models import Project, as_project_list
 
 
 class Service(object):
@@ -65,7 +66,7 @@ class ProjectsService(Service):
 
         resp = requests.post(url, headers=self.get_auth_header(), data=params)
 
-        return resp.json()
+        return Project.from_dict(resp.json())
 
     def update(self, project_id, name, description=None):
         url = '{0}{1}{2}/'.format(self.host, self.get_endpoint(), project_id)
@@ -82,7 +83,7 @@ class ProjectsService(Service):
             error_msg = "{0} - {1}".format(resp.status_code, errors)
             raise requests.HTTPError(error_msg, response=resp)
 
-        return data
+        return Project.from_dict(data)
 
     def delete(self, project_id):
         url = '{0}{1}{2}/'.format(self.host, self.get_endpoint(), project_id)
@@ -108,7 +109,7 @@ class ProjectsService(Service):
             error_msg = "{0} - {1}".format(resp.status_code, errors)
             raise requests.HTTPError(error_msg, response=resp)
 
-        return data
+        return Project.from_dict(data)
 
     def list(self):
         url = '{0}{1}'.format(self.host, self.get_endpoint())
@@ -120,4 +121,4 @@ class ProjectsService(Service):
             error_msg = "{0} - {1}".format(resp.status_code, errors)
             raise requests.HTTPError(error_msg, response=resp)
 
-        return data
+        return as_project_list(data)
