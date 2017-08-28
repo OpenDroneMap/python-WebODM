@@ -57,25 +57,33 @@ class AuthService(Service):
 class ProjectsService(Service):
     endpoint = '/api/projects/'
 
+    @property
+    def general_url(self):
+        return '{0}{1}'.format(self.host, self.get_endpoint())
+
+    def specific_url(self, project_id):
+        return '{0}{1}{2}/'.format(self.host, self.get_endpoint(), project_id)
+
     def create(self, name, description=None):
-        url = '{0}{1}'.format(self.host, self.get_endpoint())
         params = {
             'name': name,
             'description': description
         }
-
-        resp = requests.post(url, headers=self.get_auth_header(), data=params)
+        resp = requests.post(
+            self.general_url, headers=self.get_auth_header(), data=params)
 
         return Project.from_dict(resp.json())
 
     def update(self, project_id, name, description=None):
-        url = '{0}{1}{2}/'.format(self.host, self.get_endpoint(), project_id)
         params = {
             'name': name,
             'description': description
         }
-
-        resp = requests.patch(url, headers=self.get_auth_header(), data=params)
+        resp = requests.patch(
+            self.specific_url(project_id),
+            headers=self.get_auth_header(),
+            data=params
+        )
         data = resp.json()
 
         if resp.status_code >= 400 and resp.status_code < 500:
@@ -86,8 +94,8 @@ class ProjectsService(Service):
         return Project.from_dict(data)
 
     def delete(self, project_id):
-        url = '{0}{1}{2}/'.format(self.host, self.get_endpoint(), project_id)
-        resp = requests.delete(url, headers=self.get_auth_header())
+        resp = requests.delete(
+            self.specific_url(project_id), headers=self.get_auth_header())
 
         if resp.status_code >= 400 and resp.status_code < 500:
             data = resp.json()
@@ -100,8 +108,8 @@ class ProjectsService(Service):
         raise Exception('Unexpected status code: {0}'.format(resp.status_code))
 
     def get(self, project_id):
-        url = '{0}{1}{2}/'.format(self.host, self.get_endpoint(), project_id)
-        resp = requests.get(url, headers=self.get_auth_header())
+        resp = requests.get(
+            self.specific_url(project_id), headers=self.get_auth_header())
         data = resp.json()
 
         if resp.status_code >= 400 and resp.status_code < 500:
@@ -112,8 +120,7 @@ class ProjectsService(Service):
         return Project.from_dict(data)
 
     def list(self):
-        url = '{0}{1}'.format(self.host, self.get_endpoint())
-        resp = requests.get(url, headers=self.get_auth_header())
+        resp = requests.get(self.general_url, headers=self.get_auth_header())
         data = resp.json()
 
         if resp.status_code >= 400 and resp.status_code < 500:
