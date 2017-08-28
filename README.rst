@@ -56,7 +56,7 @@ Roadmap
 * Node Service
 
   - ...
-* [ ] Extract AuthService from Webodm
+* [X] Extract AuthService from Webodm
 
 Credits
 ---------
