@@ -50,7 +50,7 @@ Roadmap
   - [ ] Update
   - [ ] Delete
   - [ ] Get
-  - [ ] List
+  - [X] List
   - [ ] Get and List filters
   - ...
 * Node Service

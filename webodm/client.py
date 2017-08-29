@@ -3,7 +3,7 @@
 
 """WebODM Client."""
 
-from .services import AuthService, ProjectsService
+from .services import AuthService, ProjectsService, TasksService
 
 LOCAL_HOST = 'http://localhost:8000'
 
@@ -22,4 +22,5 @@ class Webodm(object):
         if username is not None and password is not None:
             self.token = AuthService(self.host).auth(username, password)
 
-        self.projects = ProjectsService(self.token, self.host)
+        self.projects = ProjectsService(self.host, self.token)
+        self.tasks = TasksService(self.host, self.token)

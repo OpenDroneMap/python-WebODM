@@ -6,23 +6,13 @@
 import requests
 
 from .exceptions import NonFieldErrors, ImproperlyConfigured
-from .models import Project, as_project_list
+from .models import Project, as_project_list, as_task_list
 
 
 class Service(object):
-    endpoint = None
-
     def __init__(self, host, token=None):
         self.host = host
         self.token = token
-
-    def get_endpoint(self):
-        if self.endpoint:
-            return self.endpoint
-        else:
-            raise ImproperlyConfigured(
-                "No endpoint configured."
-                " Provide an endpoint.")
 
     def get_auth_header(self):
         if self.token is not None:
@@ -34,10 +24,9 @@ class Service(object):
 
 
 class AuthService(Service):
-    endpoint = '/api/token-auth/'
 
     def auth(self, username, password):
-        url = '{0}{1}'.format(self.host, self.get_endpoint())
+        url = '{0}/api/token-auth/'.format(self.host)
         req_data = {
             'username': username,
             'password': password
@@ -55,7 +44,8 @@ class AuthService(Service):
 
 
 class ProjectsService(Service):
-    endpoint = '/api/projects/'
+    def get_endpoint(self):
+        return '/api/projects/'
 
     @property
     def general_url(self):
@@ -129,3 +119,21 @@ class ProjectsService(Service):
             raise requests.HTTPError(error_msg, response=resp)
 
         return as_project_list(data)
+
+
+class TasksService(Service):
+
+    def get_endpoint(self, project_id):
+        return '/api/projects/{0}/tasks/'.format(project_id)
+
+    def list(self, project_id):
+        url = '{0}{1}'.format(self.host, self.get_endpoint(project_id))
+        resp = requests.get(url, headers=self.get_auth_header())
+        data = resp.json()
+
+        if resp.status_code >= 400 and resp.status_code < 500:
+            errors = " ".join(data.values())
+            error_msg = "{0} - {1}".format(resp.status_code, errors)
+            raise requests.HTTPError(error_msg, response=resp)
+
+        return as_task_list(data)

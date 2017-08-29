@@ -96,10 +96,6 @@ def mocker_request_list_404(*args, **kwargs):
     return MockResponse({'detail': 'Not Found.'}, 404)
 
 
-def test_projects_service_init(projects):
-    assert projects.endpoint == '/api/projects/'
-
-
 def test_create_ok(mocker, projects, project_data):
     mocker.patch('requests.post', side_effect=mocked_request_create)
     project = projects.create('Project One', 'Test description')
@@ -164,7 +160,7 @@ def test_get_not_found(mocker, projects, project_data):
     assert '404 - Not Found.' == str(e.value)
 
 
-def test_list_ok(mocker, projects, project_list, project_data):
+def test_list_ok(mocker, projects, project_data):
     mocker.patch('requests.get', side_effect=mocked_request_list_ok)
     projects = projects.list()
     assert projects == [Project.from_dict(project_data)]

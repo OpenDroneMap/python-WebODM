@@ -78,3 +78,7 @@ class Task(object):
             created_at=dct['created_at'],
             pending_action=dct['pending_action'],
         )
+
+
+def as_task_list(data):
+    return [Task.from_dict(x) for x in data]
